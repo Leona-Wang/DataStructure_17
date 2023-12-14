@@ -77,7 +77,7 @@ public class GoogleQuery
 		//using Jsoup analyze html string
 		Document doc = Jsoup.parse(content);
 		
-		
+		System.out.println(doc);
 		
 		//select particular element(tag) which you want 
 		Elements lis = doc.select("div");
