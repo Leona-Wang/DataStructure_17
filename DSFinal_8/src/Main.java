@@ -1,15 +1,43 @@
-
+import java.io.IOException;
+import java.util.Scanner;
 
 
 public class Main{
 	
 	public static void main(String[] args) {
-		System.out.println("Hello");
-
-		System.out.println("Good");
-
 		
-
+		Scanner sc=new Scanner(System.in);
+		
+		
+		System.out.println("請輸入關鍵字");
+		
+		String input=sc.nextLine();
+		
+		
+		try 
+		{
+			System.out.println(new GoogleQuery(input+" 蝦皮").query());
+//			
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		sc.close();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 }
