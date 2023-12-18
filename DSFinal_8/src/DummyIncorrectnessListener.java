@@ -1,4 +1,4 @@
-/*import org.htmlunit.IncorrectnessListener;
+import org.htmlunit.IncorrectnessListener;
 
 public class DummyIncorrectnessListener implements IncorrectnessListener {
 
@@ -6,4 +6,4 @@ public class DummyIncorrectnessListener implements IncorrectnessListener {
   public void notify(String s, Object o) {
     // nothing to do ...
   }
-}*/
+}

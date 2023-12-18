@@ -1,4 +1,4 @@
-/*import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,7 +26,7 @@ import org.jsoup.select.Elements;
 
 
 
-public class Main {
+public class BooksSearch {
 
      
 	 
@@ -89,19 +89,6 @@ public class Main {
     	 
     	 webClient.close();
     	 
-    	 /*try {
-    		 
-    	 }catch(Exception e) {
-    		 //e.printStackTrace();
-    	 }finally {
-    		 
-    	 }*/
-    	 
-    	 
-    	 
-    	 
-    	 
-    	 
           // URL
     	/*URL url = new URL("https://shopee.tw/product/26856452/2994252379?gad_source=1&gclid=Cj0KCQiAj_CrBhD-ARIsAIiMxT9imhKKfjPlHipRWVhNxWuVNzsY6IxEETAE4micIC0_PjUluuRd1IAaAhB8EALw_wcB");
  		URLConnection conn = url.openConnection();
@@ -142,5 +129,6 @@ public class Main {
           
           // Print content
                          
-     }
-}*/
+     }*/
+	}
+}

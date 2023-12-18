@@ -1,4 +1,4 @@
-/*import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,7 +26,7 @@ import org.jsoup.select.Elements;
 
 
 
-public class Main {
+public class MomoSearch {
 
      
 	 
@@ -139,5 +139,6 @@ public class Main {
           
           // Print content
                          
-     }
-}*/
+     }*/
+	}
+}

@@ -1,4 +1,4 @@
-/*import java.net.MalformedURLException;
+import java.net.MalformedURLException;
 
 import org.htmlunit.ScriptException;
 import org.htmlunit.html.HtmlPage;
@@ -38,4 +38,4 @@ public class DummyJavascriptErrorListener implements JavaScriptErrorListener {
 	}
 
   
-}*/
+}
