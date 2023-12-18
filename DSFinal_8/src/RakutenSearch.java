@@ -56,6 +56,7 @@ public class RakutenSearch {
     	 
     	 webClient.setJavaScriptTimeout(timeOut);
     	 
+    	 
     	 HtmlPage page = null;
     	 String pageXml="";
     	 
