@@ -29,116 +29,72 @@ import org.jsoup.select.Elements;
 public class MomoSearch {
 
      
+	public void search() {
+		 int timeOut=20000;
+	   	 int waitForBackgroundJavaScript = 20000;
+	   	 
+	   	 final WebClient webClient=new WebClient(BrowserVersion.CHROME);
+	   	 webClient.getOptions().setCssEnabled(false);
+	   	 webClient.getOptions().setJavaScriptEnabled(true);
+	   	 
+	   	 webClient.getOptions().setThrowExceptionOnScriptError(false);
+	   	 webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+	   	 webClient.getOptions().setActiveXNative(false);
+	   	 webClient.getOptions().setTimeout(timeOut);
+	   	 
+	   	 webClient.setJavaScriptErrorListener(new DummyJavascriptErrorListener());
+	   	 webClient.setIncorrectnessListener(new DummyIncorrectnessListener());
+	   	 
+	   	 webClient.getOptions().setDownloadImages(false);
+	   	 
+	   	 webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+	   	 
+	   	 
+	   	 webClient.setJavaScriptTimeout(timeOut);
+	   	 
+	   	 HtmlPage page = null;
+	   	 String pageXml="";
+	   	 
+	   	 try {
+	   		 page=webClient.getPage("https://www.momoshop.com.tw/search/searchShop.jsp?keyword=%E6%B4%97%E8%A1%A3%E6%A9%9F&searchType=1&cateLevel=0&cateCode=&curPage=1&_isFuzzy=0&showType=chessboardType&isBrandCategory=N&serviceCode=MT01&osm=googleKw&utm_source=google&utm_medium=cpc6&utm_content=keyword&gclid=CjwKCAiA-P-rBhBEEiwAQEXhH8zprthG9w7MaixZ3qB9bLDHfj26kl4VIdF2g3CDQSoqzuWssfA0GhoCVr4QAvD_BwE");
+	      	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
+	      	 Thread.sleep(10000);
+	      	 pageXml=page.asXml();
+	      	 Document parse=Jsoup.parse(pageXml);
+	      	 
+	      	 Elements divs = parse.select("h3.prdName");
+		     Elements spans=parse.select("span.price");
+		     Elements as=parse.select("a.goodsUrl");
+	        
+	        // Get td Iterator
+	         System.out.println(divs.size());
+	         System.out.println(spans.size());
+	       
+		       for (int i=0;i<divs.size();i++) {
+		    	   String a=divs.get(i).text();
+			       String b=spans.get(i).text();
+			       String citeUrl = as.get(i).attr("href").replace("/url?q=", "");
+			       	  
+			       	  
+			       if (a.equals("")) {
+			    	   System.out.println("no");
+			       }
+			       else {
+			       	   System.out.println(a+" price "+b+"\n"+"https://www.momoshop.com.tw/"+citeUrl);  
+			       	  }
+			       System.out.println("----------------------------\n\n"); 
+		      	  
+		        }
+		   	 
+		   	 
+		   	 webClient.close();
+   	 }catch(Exception e) {
+   		 
+   	 }
+   	 
+	}
 	 
 
-	public static void main(String[] args) throws Exception {
-    	 
-		
-    	 int timeOut=20000;
-    	 int waitForBackgroundJavaScript = 20000;
-    	 
-    	 final WebClient webClient=new WebClient(BrowserVersion.CHROME);
-    	 webClient.getOptions().setCssEnabled(false);
-    	 webClient.getOptions().setJavaScriptEnabled(true);
-    	 
-    	 webClient.getOptions().setThrowExceptionOnScriptError(false);
-    	 webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-    	 webClient.getOptions().setActiveXNative(false);
-    	 webClient.getOptions().setTimeout(timeOut);
-    	 
-    	 webClient.setJavaScriptErrorListener(new DummyJavascriptErrorListener());
-    	 webClient.setIncorrectnessListener(new DummyIncorrectnessListener());
-    	 
-    	 webClient.getOptions().setDownloadImages(false);
-    	 
-    	 webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-    	 
-    	 
-    	 webClient.setJavaScriptTimeout(timeOut);
-    	 
-    	 HtmlPage page = null;
-    	 String pageXml="";
-    	 
-    	 page=webClient.getPage("https://www.momoshop.com.tw/goods/GoodsDetail.jsp?i_code=12124006&mdiv=1099900000-bt_0_270_01-&ctype=B");
-    	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
-    	 
-		 pageXml=page.asXml();
-		 Document parse=Jsoup.parse(pageXml);
-		 
-         // Get first table
-         Elements divs = parse.select("span.seoPrice");
-         // Get td Iterator
-         
-        for (Element div:divs) {
-       	  
-       	  String a=div.text();
-       	  if (a.equals("")) {
-       		  System.out.println("no");
-       	  }
-       	  else {
-       		  System.out.println(a);
-       		  System.out.println("----------------------------\n\n");
-       	  }
-       	  
-       	  
-         }
-    	 
-    	 
-    	 webClient.close();
-    	 
-    	 /*try {
-    		 
-    	 }catch(Exception e) {
-    		 //e.printStackTrace();
-    	 }finally {
-    		 
-    	 }*/
-    	 
-    	 
-    	 
-    	 
-    	 
-    	 
-          // URL
-    	/*URL url = new URL("https://shopee.tw/product/26856452/2994252379?gad_source=1&gclid=Cj0KCQiAj_CrBhD-ARIsAIiMxT9imhKKfjPlHipRWVhNxWuVNzsY6IxEETAE4micIC0_PjUluuRd1IAaAhB8EALw_wcB");
- 		URLConnection conn = url.openConnection();
- 		InputStream in = conn.getInputStream();
- 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
- 		
- 		
- 		String retVal = "";
-
- 		String line = null;
-
- 		while ((line = br.readLine()) != null)
- 		{
- 			retVal = retVal + line + "\n";
- 		}
-
- 		System.out.println(retVal);
-   		System.out.println("-------------------------");
- 		
-          // Create the Document Object
-          Document doc = Jsoup.parse(retVal);
-          // Get first table
-          Elements divs = doc.select("div");
-          // Get td Iterator
-          
-         /* for (Element div:divs) {
-        	  
-        	  String a=div.text();
-        	  if (a.equals("")) {
-        		  System.out.println("no");
-        	  }
-        	  else {
-        		  System.out.println(a);
-        	  }
-        	  
-        	  
-          }
-          
-          // Print content
-                         
-     }*/
-	}
+	
+	
 }
