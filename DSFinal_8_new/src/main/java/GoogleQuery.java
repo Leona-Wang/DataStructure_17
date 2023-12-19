@@ -29,7 +29,7 @@ public class GoogleQuery
 			// when entering Chinese keywords.
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
 			//this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
-			this.url = "http://soslab.nccu.edu.tw/Welcome.html";
+			this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
 			// this.url = "https://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
 		}
 		catch (Exception e)
