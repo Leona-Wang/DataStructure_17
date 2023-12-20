@@ -28,12 +28,7 @@ import org.jsoup.select.Elements;
 
 public class YahooSearch {
 
-     
-	 
-
-	public static void main(String[] args) throws Exception {
-    	 
-		
+     public void search() {
     	 int timeOut=20000;
     	 int waitForBackgroundJavaScript = 20000;
     	 
@@ -59,88 +54,54 @@ public class YahooSearch {
     	 HtmlPage page = null;
     	 String pageXml="";
     	 
-    	 page=webClient.getPage("https://tw.bid.yahoo.com/item/100429386950");
-    	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
     	 
-		 pageXml=page.asXml();
-		 Document parse=Jsoup.parse(pageXml);
-		 
-         // Get first table
-         Elements divs = parse.select("em.price__IiPh4");
-         
-         
-         // Get td Iterator
-         
-         System.out.println(divs.size());
-        for (Element div:divs) {
-       	  
-       	  String a=div.text();
-       	  if (a.equals("")) {
-       		  System.out.println("no");
-       	  }
-       	  else {
-       		  System.out.println(a);
-       		  System.out.println("----------------------------\n\n");
-       	  }
-       	  
-       	  
-         }
-    	 
-    	 
-    	 webClient.close();
-    	 
-    	 /*try {
-    		 
+    	 try {
+    		 page=webClient.getPage("https://tw.bid.yahoo.com/search/auction/product?p=%E6%8B%96%E9%9E%8B");
+        	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
+        	 Thread.sleep(10000);
+    		 pageXml=page.asXml();
+    		 Document parse=Jsoup.parse(pageXml);
+    		
+    		 //System.out.println(parse);
+             // Get first table
+             Elements divs = parse.select("span.sc-1d7r8jg-0.sc-dp9751-0.sc-1drl28c-5.czfCFU.fUBIAU.biZSHp");
+             
+             Elements spans=parse.select("span.sc-1d7r8jg-0.sc-dp9751-0.eLSRyH.eEsfHX");
+             Elements as=parse.select("a.sc-1drl28c-1.frLXbD");
+             
+             // Get td Iterator
+             System.out.println(divs.size());
+             System.out.println(as.size());
+             System.out.println(spans.size());
+            
+            for (int i=0;i<10;i++) {
+           	  
+            	
+    	       	  String a=divs.get(i).text();
+    	       	  String b=spans.get(i).text();
+    	       	  String citeUrl = as.get(i).attr("href");
+    	       	  
+    	       	  System.out.println(a+" "+b);
+    	       	  if (citeUrl.equals("")) {
+    	       		  System.out.println("no");
+    	       	  }
+    	       	  else {
+    	       		  System.out.println(citeUrl);
+    	       		  
+    	       	  }
+    	       	System.out.println("----------------------------\n\n"); 
+           	  
+             }
+        	 
+        	 
+        	 webClient.close();
     	 }catch(Exception e) {
-    		 //e.printStackTrace();
-    	 }finally {
     		 
-    	 }*/
+    	 }
     	 
     	 
-    	 
-    	 
-    	 
-    	 
-          // URL
-    	/*URL url = new URL("https://shopee.tw/product/26856452/2994252379?gad_source=1&gclid=Cj0KCQiAj_CrBhD-ARIsAIiMxT9imhKKfjPlHipRWVhNxWuVNzsY6IxEETAE4micIC0_PjUluuRd1IAaAhB8EALw_wcB");
- 		URLConnection conn = url.openConnection();
- 		InputStream in = conn.getInputStream();
- 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
- 		
- 		
- 		String retVal = "";
-
- 		String line = null;
-
- 		while ((line = br.readLine()) != null)
- 		{
- 			retVal = retVal + line + "\n";
- 		}
-
- 		System.out.println(retVal);
-   		System.out.println("-------------------------");
- 		
-          // Create the Document Object
-          Document doc = Jsoup.parse(retVal);
-          // Get first table
-          Elements divs = doc.select("div");
-          // Get td Iterator
-          
-         /* for (Element div:divs) {
-        	  
-        	  String a=div.text();
-        	  if (a.equals("")) {
-        		  System.out.println("no");
-        	  }
-        	  else {
-        		  System.out.println(a);
-        	  }
-        	  
-        	  
-          }*/
-          
-          // Print content*/
-                         
      }
+	 
+
+	
 }
