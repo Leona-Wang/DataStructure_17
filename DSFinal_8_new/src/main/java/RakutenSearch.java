@@ -27,120 +27,82 @@ import org.jsoup.select.Elements;
 
 
 public class RakutenSearch {
-
-     
-	 
-
-	public static void main(String[] args) throws Exception {
-    	 
-		
-    	 int timeOut=20000;
-    	 int waitForBackgroundJavaScript = 20000;
-    	 
-    	 final WebClient webClient=new WebClient(BrowserVersion.CHROME);
-    	 webClient.getOptions().setCssEnabled(false);
-    	 webClient.getOptions().setJavaScriptEnabled(true);
-    	 
-    	 webClient.getOptions().setThrowExceptionOnScriptError(false);
-    	 webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-    	 webClient.getOptions().setActiveXNative(false);
-    	 webClient.getOptions().setTimeout(timeOut);
-    	 
-    	 webClient.setJavaScriptErrorListener(new DummyJavascriptErrorListener());
-    	 webClient.setIncorrectnessListener(new DummyIncorrectnessListener());
-    	 
-    	 webClient.getOptions().setDownloadImages(false);
-    	 
-    	 webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-    	 
-    	 
-    	 webClient.setJavaScriptTimeout(timeOut);
-    	 
-    	 
-    	 HtmlPage page = null;
-    	 String pageXml="";
-    	 
-    	 page=webClient.getPage("https://www.rakuten.com.tw/shop/3crepublic/product/u5sagiln1/");
-    	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
-    	 
-		 pageXml=page.asXml();
-		 Document parse=Jsoup.parse(pageXml);
+	
+	
+	
+	public void search() {
+		int timeOut=20000;
+   	 int waitForBackgroundJavaScript = 20000;
+   	 
+   	 final WebClient webClient=new WebClient(BrowserVersion.CHROME);
+   	 webClient.getOptions().setCssEnabled(false);
+   	 webClient.getOptions().setJavaScriptEnabled(true);
+   	 
+   	 webClient.getOptions().setThrowExceptionOnScriptError(false);
+   	 webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+   	 webClient.getOptions().setActiveXNative(false);
+   	 webClient.getOptions().setTimeout(timeOut);
+   	 
+   	 webClient.setJavaScriptErrorListener(new DummyJavascriptErrorListener());
+   	 webClient.setIncorrectnessListener(new DummyIncorrectnessListener());
+   	 
+   	 webClient.getOptions().setDownloadImages(false);
+   	 
+   	 webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+   	 
+   	 
+   	 webClient.setJavaScriptTimeout(timeOut);
+   	 
+   	 HtmlPage page = null;
+   	 String pageXml="";
+   	 
+   	 try {
+   		 page=webClient.getPage("https://www.rakuten.com.tw/search/%E6%B2%99%E7%99%BC/");
+      	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
+      	 Thread.sleep(10000);
+   		 pageXml=page.asXml();
+   	 }catch(Exception e) {
+   		 
+   	 }
+   	 
+   	 
+		 //Document parse=Jsoup.parse(pageXml);
 		 
-         // Get first table
-         Elements divs = parse.select("span.qa-product-actual-price.Kt7rtgyRbYHpvM2_oTfU");
-         
-         // Get td Iterator
-         System.out.println(divs.size());
-        
-        for (Element div:divs) {
-       	  
-	       	  String a=div.text();
-	       	  if (a.equals("")) {
-	       		  System.out.println("no");
-	       	  }
-	       	  else {
-	       		  System.out.println(a);
-	       		  System.out.println("----------------------------\n\n");
-        }
-       	  
-       	  
-         }
-    	 
-    	 
-    	 webClient.close();
-    	 
-    	 /*try {
-    		 
-    	 }catch(Exception e) {
-    		 //e.printStackTrace();
-    	 }finally {
-    		 
-    	 }*/
-    	 
-    	 
-    	 
-    	 
-    	 
-    	 
-          // URL
-    	/*URL url = new URL("https://shopee.tw/product/26856452/2994252379?gad_source=1&gclid=Cj0KCQiAj_CrBhD-ARIsAIiMxT9imhKKfjPlHipRWVhNxWuVNzsY6IxEETAE4micIC0_PjUluuRd1IAaAhB8EALw_wcB");
- 		URLConnection conn = url.openConnection();
- 		InputStream in = conn.getInputStream();
- 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
- 		
- 		
- 		String retVal = "";
-
- 		String line = null;
-
- 		while ((line = br.readLine()) != null)
- 		{
- 			retVal = retVal + line + "\n";
- 		}
-
- 		System.out.println(retVal);
-   		System.out.println("-------------------------");
- 		
-          // Create the Document Object
-          Document doc = Jsoup.parse(retVal);
-          // Get first table
-          Elements divs = doc.select("div");
-          // Get td Iterator
-          
-         /* for (Element div:divs) {
-        	  
-        	  String a=div.text();
-        	  if (a.equals("")) {
-        		  System.out.println("no");
-        	  }
-        	  else {
-        		  System.out.println(a);
-        	  }
-        	  
-        	  
-          }*/
-          
-          // Print content*/
-                         
-     }
+		 int nameIdx=0;
+		 int urlIdx=0;
+		 int priceIdx=0;
+		 int minIdx=0;
+		 int maxIdx=0;
+		 int itemListPriceIdx=0;
+		 
+		 String name="";
+		 String url="";
+		 String min="";
+		 String max="";
+		 
+		 for (int i=0;i<10;i++) {
+			 
+			 nameIdx=pageXml.indexOf("itemName");
+			 urlIdx=pageXml.indexOf("itemUrl");
+			 priceIdx=pageXml.indexOf("itemPrice");
+			 minIdx=pageXml.indexOf("\"min\"");
+			 maxIdx=pageXml.indexOf("\"max\"");
+			 itemListPriceIdx=pageXml.indexOf("\"itemListPrice\"");
+			 
+			 name=pageXml.substring(nameIdx+11, urlIdx-3);
+			 System.out.println(name);
+			 url=pageXml.substring(urlIdx+10, priceIdx-3);
+			 System.out.println(url);
+			 min=pageXml.substring(minIdx+6, maxIdx-1);
+			 System.out.println(min);
+			 max=pageXml.substring(maxIdx+6, itemListPriceIdx-2);
+			 System.out.println(max+"\n------------------------");
+			 
+			 pageXml=pageXml.substring(itemListPriceIdx+1);
+			 nameIdx=pageXml.indexOf("itemName");
+			 pageXml=pageXml.substring(nameIdx-1);
+		 }
+		 
+		 webClient.close();
+	}
 }
