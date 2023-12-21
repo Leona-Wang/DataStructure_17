@@ -32,6 +32,10 @@ public class Search{
 			this.rakutenUrl="https://www.rakuten.com.tw/search/"+encodeKeyword+"/";
 			this.yahooUrl="https://tw.bid.yahoo.com/search/auction/product?p="+encodeKeyword;
 			
+			System.out.println(momoUrl+"\n"+booksUrl+"\n"+rakutenUrl+"\n"+yahooUrl);
+			
+			
+			
 		}catch(Exception e){
 			
 			System.out.println(e.getMessage());
