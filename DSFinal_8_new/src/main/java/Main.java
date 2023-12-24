@@ -10,6 +10,7 @@ public class Main{
 		System.out.println("請輸入關鍵字");
 		String input=sc.nextLine();
 		
+		
 		Search search=new Search(input);
 	
 		sc.close();

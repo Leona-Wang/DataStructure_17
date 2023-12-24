@@ -12,6 +12,8 @@ public class ProductList{
 	public ProductList() {
 		
 		this.products=new ArrayList<Product>();
+		this.productList=new ArrayList<Product>();
+		this.prices=new ArrayList<Integer>();
 		
 	}
 	

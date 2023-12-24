@@ -25,7 +25,7 @@ public class Search{
 	private int timeOut=20000;
 	private int waitForBackgroundJavaScript = 20000;
 	
-	private ProductList list;
+	private ProductList list=new ProductList();
 	private ArrayList<Product> productList=new ArrayList<Product>();
 	
 	String productName="";
@@ -157,7 +157,7 @@ public class Search{
 	
 	public void rakutenSearch() {
 		try {
-			page=webClient.getPage("https://www.rakuten.com.tw/search/%E6%B2%99%E7%99%BC/");
+			page=webClient.getPage(rakutenUrl);
 			webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
 			Thread.sleep(10000);
 			pageXml=page.asXml();
@@ -210,7 +210,7 @@ public class Search{
 	
 	public void yahooSearch() {
 		try {
-	   		 page=webClient.getPage("https://tw.bid.yahoo.com/search/auction/product?p=%E6%8B%96%E9%9E%8B");
+	   		 page=webClient.getPage(yahooUrl);
 	       	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
 	       	 Thread.sleep(10000);
 	   		 pageXml=page.asXml();
@@ -250,7 +250,6 @@ public class Search{
 		int i=1;
 		for (Product p:productList) {
 			
-			System.out.println("hello");
 			System.out.println(i+"\n"+p.getProductName()+"\n"+p.getProductPrice()+"\n"+p.getProductUrl()+"\n------------------------");
 			i++;
 		}
