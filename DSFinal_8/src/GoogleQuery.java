@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class GoogleQuery
 	public String searchKeyword;
 	public String url;
 	public String content;
+	Document doc=null;
 	
 	public GoogleQuery(String searchKeyword)
 	{
@@ -28,8 +30,8 @@ public class GoogleQuery
 			// Also, consider why the results might be incorrect 
 			// when entering Chinese keywords.
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
-			//this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
-			this.url = "http://soslab.nccu.edu.tw/Welcome.html";
+			this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
+			
 			// this.url = "https://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
 		}
 		catch (Exception e)
@@ -38,12 +40,20 @@ public class GoogleQuery
 		}
 	}
 	
-	private String fetchContent() throws IOException
+	private void fetchContent() throws IOException
 	{
-		String retVal = "";
+		
+        // Connect to the Google search page
+        try {
+			doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36").get();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*String retVal = "";
 
 		URL u = new URL(url);
-		URLConnection conn = u.openConnection();
+		HttpURLConnection conn =(HttpURLConnection) u.openConnection();
 		//set HTTP header
 		conn.setRequestProperty("User-agent", "Chrome/107.0.5304.107");
 		InputStream in = conn.getInputStream();
@@ -55,56 +65,25 @@ public class GoogleQuery
 		while((line = bufReader.readLine()) != null)
 		{
 			retVal += line;
-		}
-		return retVal;
+		}*/
+		
 	}
 	
 	public HashMap<String, String> query() throws IOException
 	{
-		if(content == null)
-		{
-			content = fetchContent();
-		}
-
+		
+		fetchContent();
 		HashMap<String, String> retVal = new HashMap<String, String>();
 		
-		/* 
-		 * some Jsoup source
-		 * https://jsoup.org/apidocs/org/jsoup/nodes/package-summary.html
-		 * https://www.1ju.org/jsoup/jsoup-quick-start
- 		 */
-		
-		//using Jsoup analyze html string
-		Document doc = Jsoup.parse(content);
-		
-		System.out.println(doc);
-		
-		//select particular element(tag) which you want 
-		Elements lis = doc.select("div");
-		lis = lis.select(".kCrYT");
-		
-		for(Element li : lis)
-		{
-			try 
-			{
-				String citeUrl = li.select("a").get(0).attr("href").replace("/url?q=", "");
-				String title = li.select("a").get(0).select(".vvjwJb").text();
-				
-				if(title.equals("")) 
-				{
-					continue;
-				}
-				
-				System.out.println("Title: " + title + " , url: " + citeUrl);
-				
-				//put title and pair into HashMap
-				retVal.put(title, citeUrl);
+		Elements titles=doc.select("h3.LC20lb.MBeuO.DKV0Md");
+		Elements citeUrls = doc.select("div.yuRUbf a");
+        for (int i=0;i<titles.size();i++) {
+            
+        	System.out.println("Title: " +titles.get(i).text()+ " \n url: " + citeUrls.get(i).attr("href")+"\n--------------------");
+        	retVal.put(titles.get(i).text(), citeUrls.get(i).attr("href"));
 
-			} catch (IndexOutOfBoundsException e) 
-			{
-//				e.printStackTrace();
-			}
-		}
+        }
+		
 		
 		return retVal;
 	}
