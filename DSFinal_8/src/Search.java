@@ -54,6 +54,7 @@ public class Search{
 		}
 		
 		webClientSettings();
+		
 		momoSearch();
 		booksSearch();
 		rakutenSearch();
@@ -82,6 +83,44 @@ public class Search{
 		webClient.setJavaScriptTimeout(timeOut);
 	}
 
+	
+	public int fetchContent(String url) {
+		
+		try {
+			page=webClient.getPage(url);
+	      	webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
+	      	Thread.sleep(10000);
+	      	pageXml=page.asXml();
+	      	//System.out.println(pageXml);
+	      	Document parse=Jsoup.parse(pageXml);
+		}catch(Exception e) {
+			
+		}
+		
+		int retVal=0;
+		int fromIdx=0;
+		int found=-1;
+		
+		while ((found = pageXml.indexOf("洗衣機", fromIdx)) != -1)
+		{
+			retVal++;
+			fromIdx = found + 3;
+		}
+		
+		return retVal;
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void momoSearch() {
 		try {
 	   		 page=webClient.getPage(momoUrl);

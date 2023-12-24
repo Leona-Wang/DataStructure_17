@@ -19,16 +19,13 @@ public class GoogleQuery
 	public String content;
 	Document doc=null;
 	
+	
 	public GoogleQuery(String searchKeyword)
 	{
 		this.searchKeyword = searchKeyword;
 		try 
 		{
-			// This part has been specially handled for Chinese keyword processing. 
-			// You can comment out the following two lines 
-			// and use the line of code in the lower section. 
-			// Also, consider why the results might be incorrect 
-			// when entering Chinese keywords.
+			
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
 			this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
 			
@@ -50,22 +47,6 @@ public class GoogleQuery
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*String retVal = "";
-
-		URL u = new URL(url);
-		HttpURLConnection conn =(HttpURLConnection) u.openConnection();
-		//set HTTP header
-		conn.setRequestProperty("User-agent", "Chrome/107.0.5304.107");
-		InputStream in = conn.getInputStream();
-
-		InputStreamReader inReader = new InputStreamReader(in, "utf-8");
-		BufferedReader bufReader = new BufferedReader(inReader);
-		String line = null;
-
-		while((line = bufReader.readLine()) != null)
-		{
-			retVal += line;
-		}*/
 		
 	}
 	
@@ -78,7 +59,7 @@ public class GoogleQuery
 		Elements titles=doc.select("h3.LC20lb.MBeuO.DKV0Md");
 		Elements citeUrls = doc.select("div.yuRUbf a");
         for (int i=0;i<titles.size();i++) {
-            
+
         	System.out.println("Title: " +titles.get(i).text()+ " \n url: " + citeUrls.get(i).attr("href")+"\n--------------------");
         	retVal.put(titles.get(i).text(), citeUrls.get(i).attr("href"));
 

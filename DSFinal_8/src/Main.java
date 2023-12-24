@@ -10,8 +10,14 @@ public class Main{
 		System.out.println("請輸入關鍵字");
 		String input=sc.nextLine();
 		
+		GoogleQuery google=new GoogleQuery(input);
+		try {
+			google.query();
+		}catch(Exception e) {
+			
+		}
 		
-		Search search=new Search(input);
+		//Search search=new Search(input);
 	
 		sc.close();
 		
