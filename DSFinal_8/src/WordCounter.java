@@ -9,6 +9,8 @@ import org.htmlunit.BrowserVersion;
 import org.htmlunit.NicelyResynchronizingAjaxController;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlPage;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class WordCounter
 {
@@ -17,7 +19,7 @@ public class WordCounter
 	
 	private final WebClient webClient=new WebClient(BrowserVersion.CHROME);
 	private HtmlPage page=null;	
-	private String pageXml="";
+	
 	private int timeOut=20000;
 	private int waitForBackgroundJavaScript = 20000;
 
@@ -45,26 +47,18 @@ public class WordCounter
 		webClient.setJavaScriptTimeout(timeOut);
 	}
 	
-	private String fetchContent() throws IOException
+	private void fetchContent() throws IOException
 	{
-		URL url = new URL(this.urlStr);
-		URLConnection conn = url.openConnection();
-		InputStream in = conn.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		
-		
-		String retVal = "";
-
-		String line = null;
-
-		while ((line = br.readLine()) != null)
-		{
-			retVal = retVal + line + "\n";
+		try {
+			page=webClient.getPage(urlStr);
+	      	webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
+	      	Thread.sleep(10000);
+	      	content=page.asXml();
+	      	//System.out.println(pageXml);
+	      	Document parse=Jsoup.parse(content);
+		}catch(Exception e) {
+			
 		}
-
-		
-		System.out.println(retVal);
-		return retVal;
 		
 	}
 
@@ -72,8 +66,7 @@ public class WordCounter
 	{
 		if (content == null)
 		{
-			content = fetchContent();
-			
+			fetchContent();
 		}
 
 		// To do a case-insensitive search, we turn the whole content and keyword into
@@ -93,4 +86,26 @@ public class WordCounter
 
 		return retVal;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
