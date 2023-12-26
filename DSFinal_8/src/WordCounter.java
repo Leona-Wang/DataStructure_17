@@ -23,9 +23,10 @@ public class WordCounter
 	private int timeOut=20000;
 	private int waitForBackgroundJavaScript = 20000;
 
-	public WordCounter(String urlStr)
+	public WordCounter(String urlStr,String content)
 	{
 		this.urlStr = urlStr;
+		this.content=content;
 	}
 
 	public void webClientSettings() {
@@ -64,16 +65,18 @@ public class WordCounter
 
 	public int countKeyword(String keyword) throws IOException
 	{
-		if (content == null)
+		/*if (content == null)
 		{
 			fetchContent();
-		}
+		}*/
 
 		// To do a case-insensitive search, we turn the whole content and keyword into
 		// upper-case:
+		
 		content = content.toUpperCase();
+		
 		keyword = keyword.toUpperCase();
-
+		
 		int retVal = 0;
 		int fromIdx = 0;
 		int found = -1;
@@ -83,7 +86,7 @@ public class WordCounter
 			retVal++;
 			fromIdx = found + keyword.length();
 		}
-
+		
 		return retVal;
 	}
 	

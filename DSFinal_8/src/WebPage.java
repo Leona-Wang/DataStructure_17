@@ -5,14 +5,16 @@ public class WebPage
 {
 	public String url;
 	public String name;
+	public String pageXml;
 	public WordCounter counter;
 	public double score;
 
-	public WebPage(String url, String name)
+	public WebPage(String url, String name,String pageXml)
 	{
 		this.url = url;
 		this.name = name;
-		this.counter = new WordCounter(url);
+		this.pageXml=pageXml;
+		this.counter = new WordCounter(url,pageXml);
 	}
 
 	public void setScore(ArrayList<Keyword> keywords) throws IOException
@@ -24,6 +26,7 @@ public class WebPage
 		for (Keyword k:keywords) {
 			score+=counter.countKeyword(k.name)*k.weight;
 		}
+		
 
 	}
 }

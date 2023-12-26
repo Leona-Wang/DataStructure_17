@@ -12,7 +12,11 @@ public class Main{
 		
 		GoogleQuery google=new GoogleQuery(input);
 		try {
+			
 			google.query();
+			
+			google.printResult();
+			
 		}catch(Exception e) {
 			
 		}

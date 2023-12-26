@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class WebTree
 {
 	public WebNode root;
+	public ArrayList<Keyword> keywords;
 
 	public WebTree(WebPage rootPage)
 	{
@@ -12,6 +13,7 @@ public class WebTree
 
 	public void setPostOrderScore(ArrayList<Keyword> keywords) throws IOException
 	{
+		this.keywords=keywords;
 		setPostOrderScore(root, keywords);
 	}
 
@@ -42,18 +44,21 @@ public class WebTree
 		System.out.print("(");
 		System.out.print(startNode.webPage.name + "," + startNode.nodeScore);
 		
-		for (WebNode w:root.children) {
+		// YOUR TURN
+		// 4. print child via pre-order
+
+		for (WebNode w:startNode.children) {
+			
 			
 			eularPrintTree(w);
 			
 		}
-		// YOUR TURN
-		// 4. print child via pre-order
-
-		System.out.print("\n)");
+		
+		System.out.print(")");
 
 		if (startNode.isTheLastChild())
 			System.out.print("\n" + repeat("\t", nodeDepth - 2));
+		
 	}
 
 	private String repeat(String str, int repeat)

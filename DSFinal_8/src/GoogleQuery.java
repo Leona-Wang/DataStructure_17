@@ -18,6 +18,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.sun.source.tree.Tree;
+
 public class GoogleQuery 
 {
 	public String searchKeyword;
@@ -30,22 +32,27 @@ public class GoogleQuery
 	private String citeUrl;
 	
 	public ArrayList<WebTree> trees=new ArrayList<WebTree>();
+	public ArrayList<Keyword> keywordList=new ArrayList<Keyword>();
 	
 	private final WebClient webClient=new WebClient(BrowserVersion.CHROME);
 	private HtmlPage page=null;	
 	private int timeOut=20000;
 	private int waitForBackgroundJavaScript = 20000;
+	private String pageXml="";
+	private String parentContent;
 	
 	
 	public GoogleQuery(String searchKeyword)
 	{
-		webClientSettings();
+		
 		this.searchKeyword = searchKeyword;
+		
 		try 
 		{
 			
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
-			this.url = "https://www.google.com/search?q="+encodeKeyword+"&oe=utf8&num=20";
+			String shop=java.net.URLEncoder.encode("購物","utf-8");
+			this.url = "https://www.google.com/search?q="+encodeKeyword+shop+"&oe=utf8&num=6";
 			
 			// this.url = "https://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
 		}
@@ -53,6 +60,8 @@ public class GoogleQuery
 		{
 			System.out.println(e.getMessage());
 		}
+		webClientSettings();
+		keywordList();
 	}
 	
 	private void fetchContent() throws IOException
@@ -76,27 +85,38 @@ public class GoogleQuery
 		
 		Elements titles=doc.select("h3.LC20lb.MBeuO.DKV0Md");
 		Elements citeUrls = doc.select("div.yuRUbf a");
+		
+		System.out.println(titles.size());
         for (int i=0;i<titles.size();i++) {
 
-        	title=titles.get(i).text();
-        	citeUrl=citeUrls.get(i).attr("href");
-        	System.out.println("Title: " +titles.get(i).text()+ " \n url: " + citeUrls.get(i).attr("href")+"\n--------------------");
         	
-        	WebPage root=new WebPage(citeUrls.get(i).attr("href"),titles.get(i).text());
+        	title=titles.get(i).text();
+        	System.out.println(title);
+        	citeUrl=citeUrls.get(i).attr("href");
+        	System.out.println(citeUrl);
+        	parentContent=takeContent(citeUrl);
+        	
+        	
+        	WebPage root=new WebPage(citeUrl,title,parentContent);
         	WebTree tree=new WebTree(root);
         	
-        	if (citeUrl.indexOf("momoshop")!=-1) {
-        		tree.root.addChild(new WebNode(momoSearch(citeUrl)));
-        	}
-        	else if (citeUrl.indexOf("books")!=-1) {
-        		tree.root.addChild(new WebNode(booksSearch(citeUrl)));
+        	
+        	/*if (citeUrl.indexOf("momoshop")!=-1) {
+        		WebPage w=momoSearch(parentContent);
+        		
+        		tree.root.addChild(new WebNode(w));
+        	}*/
+        	
+        	if (citeUrl.indexOf("books")!=-1) {
+        		tree.root.addChild(new WebNode(booksSearch(parentContent)));
         	}
         	else if (citeUrl.indexOf("rakuten")!=-1) {
-        		tree.root.addChild(new WebNode(rakutenSearch(citeUrl)));
+        		tree.root.addChild(new WebNode(rakutenSearch(parentContent)));
         	}
         	else if (citeUrl.indexOf("bid.yahoo")!=-1) {
-        		tree.root.addChild(new WebNode(yahooSearch(citeUrl)));
+        		tree.root.addChild(new WebNode(yahooSearch(parentContent)));
         	}
+        	
         	
         	trees.add(tree);
         	
@@ -127,7 +147,7 @@ public class GoogleQuery
 		webClient.setJavaScriptTimeout(timeOut);
 	}
 	
-	public WebPage momoSearch(String contentUrl) {
+	public String takeContent(String contentUrl) {
 		
 		try {
 			 page=webClient.getPage(contentUrl);
@@ -137,66 +157,86 @@ public class GoogleQuery
 		}catch(Exception e) {
 			
 		}
-		String pageXml=page.asXml();
-    	Document parse=Jsoup.parse(pageXml);
-    	Element childName=parse.selectFirst("h3.prdName");
-		Element childUrl=parse.selectFirst("a.goodsUrl");
-		return (new WebPage("https://www.momoshop.com.tw/"+childUrl.text(),childName.text()));
-
-	}
-
-	public WebPage booksSearch(String contentUrl) {
+		pageXml=page.asXml();
 		
-		try {
-			 page=webClient.getPage(contentUrl);
-	     	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
-	     	 Thread.sleep(10000);
-	     
-		}catch(Exception e) {
-			
-		}
-		String pageXml=page.asXml();
-    	Document parse=Jsoup.parse(pageXml);
-    	Element child=parse.selectFirst("div.table-td a");
-		return (new WebPage("https:"+child.attr("href"),child.attr("title")));
-
-	}
-
-	public WebPage rakutenSearch(String contentUrl) {
-		
-		try {
-			 page=webClient.getPage(contentUrl);
-	     	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
-	     	 Thread.sleep(10000);
-	     
-		}catch(Exception e) {
-			
-		}
-		String pageXml=page.asXml();
-		int nameIdx=pageXml.indexOf("itemName");
-		int urlIdx=pageXml.indexOf("itemUrl");
-		int priceIdx=pageXml.indexOf("itemPrice");
-		
-		return (new WebPage(pageXml.substring(urlIdx+10, priceIdx-3),pageXml.substring(nameIdx+11, urlIdx-3)));
+		return pageXml;
 	}
 	
-	public WebPage yahooSearch(String contentUrl) {
+	
+	public WebPage momoSearch(String parentContent) {
 		
-		try {
-			 page=webClient.getPage(contentUrl);
-	     	 webClient.waitForBackgroundJavaScript(waitForBackgroundJavaScript);
-	     	 Thread.sleep(10000);
-	     
-		}catch(Exception e) {
-			
-		}
-		String pageXml=page.asXml();
-    	Document parse=Jsoup.parse(pageXml);
-    	Element childName=parse.selectFirst("span.sc-1d7r8jg-0.sc-dp9751-0.sc-1drl28c-5.czfCFU.fUBIAU.biZSHp");
-    	Element childUrl=parse.selectFirst("a.sc-1drl28c-1.frLXbD");
-		return (new WebPage(childUrl.attr("href"),childName.text()));
+    	Document parse=Jsoup.parse(parentContent);
+    	Element childName=parse.selectFirst("h3.prdName");
+		Element childUrl=parse.selectFirst("div.TabContentD.selected a");
+		String pageContent=takeContent("https://www.momoshop.com.tw/"+childUrl.attr("href"));
+		
+		return (new WebPage("https://www.momoshop.com.tw/"+childUrl.attr("href"),childName.text(),pageContent));
+	}
+
+	public WebPage booksSearch(String parentContent) {
+		
+    	Document parse=Jsoup.parse(parentContent);
+    	Element child=parse.selectFirst("h4 a");
+		return (new WebPage(child.attr("href"),child.text(),takeContent(child.attr("href"))));
 
 	}
+
+	public WebPage rakutenSearch(String parentContent) {
+		
+		
+		int nameIdx=parentContent.indexOf("itemName");
+		int urlIdx=parentContent.indexOf("itemUrl");
+		int priceIdx=parentContent.indexOf("itemPrice");
+		
+		return (new WebPage(parentContent.substring(urlIdx+10, priceIdx-3),parentContent.substring(nameIdx+11, urlIdx-3),takeContent(parentContent.substring(urlIdx+10, priceIdx-3))));
+	}
+	
+	public WebPage yahooSearch(String parentContent) {
+		
+    	Document parse=Jsoup.parse(parentContent);
+    	Element childName=parse.selectFirst("span.sc-1d7r8jg-0.sc-dp9751-0.sc-1drl28c-5.czfCFU.fUBIAU.biZSHp");
+    	Element childUrl=parse.selectFirst("a.sc-1drl28c-1.frLXbD");
+		return (new WebPage(childUrl.attr("href"),childName.text(),takeContent(childUrl.attr("href"))));
+
+	}
+	
+	
+	public void keywordList(){
+		
+		keywordList.add(new Keyword(searchKeyword,1));
+		keywordList.add(new Keyword("蝦皮",1));
+		keywordList.add(new Keyword("shopee",1));
+		keywordList.add(new Keyword("momo",2));
+		keywordList.add(new Keyword("pchome",2));
+		keywordList.add(new Keyword("rakuten",1));
+		keywordList.add(new Keyword("樂天",1));
+		keywordList.add(new Keyword("books",1));
+		keywordList.add(new Keyword("博客來",1));
+		keywordList.add(new Keyword("維基百科",-100));
+		keywordList.add(new Keyword("wikipedia",-100));
+		keywordList.add(new Keyword("百度百科",-100));
+		keywordList.add(new Keyword("baidu",-100));
+		
+	}
+	
+	public void printResult() throws IOException {
+		
+		for (WebTree t:trees) {
+			t.setPostOrderScore(keywordList);
+			
+			t.eularPrintTree();
+		}
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 }
