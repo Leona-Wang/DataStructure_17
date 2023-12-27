@@ -6,7 +6,7 @@ public class WebNode
 	public WebNode parent;
 	public ArrayList<WebNode> children;
 	public WebPage webPage;
-	public double nodeScore;// This node's score += all its children's nodeScore
+	public int nodeScore;// This node's score += all its children's nodeScore
 
 	public WebNode(WebPage webPage)
 	{

@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ public class GoogleQuery
 	
 	public ArrayList<WebTree> trees=new ArrayList<WebTree>();
 	public ArrayList<Keyword> keywordList=new ArrayList<Keyword>();
+	public ArrayList<Integer> scores=new ArrayList<Integer>();
 	
 	private final WebClient webClient=new WebClient(BrowserVersion.CHROME);
 	private HtmlPage page=null;	
@@ -51,8 +53,8 @@ public class GoogleQuery
 		{
 			
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
-			String shop=java.net.URLEncoder.encode("購物","utf-8");
-			this.url = "https://www.google.com/search?q="+encodeKeyword+shop+"&oe=utf8&num=6";
+			String shop=java.net.URLEncoder.encode("網購","utf-8");
+			this.url = "https://www.google.com/search?q="+encodeKeyword+shop+"&oe=utf8&num=5";
 			
 			// this.url = "https://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
 		}
@@ -213,20 +215,29 @@ public class GoogleQuery
 		keywordList.add(new Keyword("books",1));
 		keywordList.add(new Keyword("博客來",1));
 		keywordList.add(new Keyword("維基百科",-100));
-		keywordList.add(new Keyword("wikipedia",-100));
 		keywordList.add(new Keyword("百度百科",-100));
-		keywordList.add(new Keyword("baidu",-100));
+		
 		
 	}
 	
 	public void printResult() throws IOException {
 		
+		
 		for (WebTree t:trees) {
 			t.setPostOrderScore(keywordList);
-			
-			t.eularPrintTree();
+			scores.add(t.root.nodeScore);
 		}
+		Sort s=new Sort(scores);
 		
+		Collections.reverse(scores);
+		for (int score:scores) {
+			for (WebTree t:trees) {
+				if (t.root.nodeScore==score) {
+					t.eularPrintTree();
+					break;
+				}
+			}
+		}
 		
 		
 		

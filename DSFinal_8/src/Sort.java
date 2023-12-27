@@ -3,7 +3,9 @@ import java.util.ArrayList;
 public class Sort{
 	
 	private ArrayList<Integer> arr=new ArrayList<Integer>();
+	
 	private int n;
+	
 	
 	
 	public Sort(ArrayList<Integer> arr) {
@@ -84,9 +86,6 @@ public class Sort{
 		
 	}
 	
-	
-	
-	
-	
-	
+
+		
 }

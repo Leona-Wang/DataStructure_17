@@ -35,7 +35,10 @@ public class WebTree
 
 	private void eularPrintTree(WebNode startNode)
 	{
-		int nodeDepth = startNode.getDepth();
+		
+		System.out.println(startNode.webPage.name+"\n"+startNode.webPage.url+"\n"+startNode.nodeScore+"\n------------");
+		
+		/*int nodeDepth = startNode.getDepth();
 
 		if (nodeDepth > 1) {
 			System.out.print("\n" + repeat("\t", nodeDepth - 1));
@@ -57,7 +60,7 @@ public class WebTree
 		System.out.print(")");
 
 		if (startNode.isTheLastChild())
-			System.out.print("\n" + repeat("\t", nodeDepth - 2));
+			System.out.print("\n" + repeat("\t", nodeDepth - 2));*/
 		
 	}
 

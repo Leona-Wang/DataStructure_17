@@ -7,7 +7,7 @@ public class WebPage
 	public String name;
 	public String pageXml;
 	public WordCounter counter;
-	public double score;
+	public int score;
 
 	public WebPage(String url, String name,String pageXml)
 	{
