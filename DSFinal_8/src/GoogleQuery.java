@@ -93,9 +93,9 @@ public class GoogleQuery
 
         	
         	title=titles.get(i).text();
-        	System.out.println(title);
+        	
         	citeUrl=citeUrls.get(i).attr("href");
-        	System.out.println(citeUrl);
+        	
         	parentContent=takeContent(citeUrl);
         	
         	
@@ -225,7 +225,9 @@ public class GoogleQuery
 		
 		for (WebTree t:trees) {
 			t.setPostOrderScore(keywordList);
-			scores.add(t.root.nodeScore);
+			if (t.root.nodeScore>=0) {
+				scores.add(t.root.nodeScore);
+			}
 		}
 		Sort s=new Sort(scores);
 		
