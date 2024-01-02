@@ -1,10 +1,12 @@
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Shopping</title>
+<title>GOSHOPPING</title>
 <style type="text/css">
+
 #padding{
 	padding: 10px 10px 10px 10px;
 }
@@ -62,8 +64,8 @@
 </div>
 
 <div class='button'>
-	<a href='ResultPage.jsp'><input type='button' class ='border-style' value='Search!'
-	style='width:100px; height:30px; background-color:#fcfaf5; font-family:courier'></a>
+	<a href ='http://localhost:8080/DSFinal_8_new/GetRequest'><input type='submit' class ='border-style' value='Search!'
+	style='width:100px; height:30px; background-color:#fcfaf5; font-family:courier' accesskey='enter'></a>
 </div>
 
 </form>
