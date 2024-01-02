@@ -14,6 +14,8 @@ import org.htmlunit.BrowserVersion;
 import org.htmlunit.NicelyResynchronizingAjaxController;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlPage;
+import org.htmlunit.javascript.JavaScriptErrorListener;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -53,9 +55,10 @@ public class GoogleQuery
 		{
 			
 			String encodeKeyword=java.net.URLEncoder.encode(searchKeyword,"utf-8");
-			String shop=java.net.URLEncoder.encode("網購","utf-8");
+			System.out.println(encodeKeyword);
+			String shop=java.net.URLEncoder.encode(" 網購","utf-8");
 			this.url = "https://www.google.com/search?q="+encodeKeyword+shop+"&oe=utf8&num=5";
-			
+			System.out.println(this.url);
 			// this.url = "https://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
 		}
 		catch (Exception e)
@@ -95,6 +98,7 @@ public class GoogleQuery
         	title=titles.get(i).text();
         	
         	citeUrl=citeUrls.get(i).attr("href");
+        	System.out.println(citeUrl);
         	
         	parentContent=takeContent(citeUrl);
         	
@@ -113,7 +117,10 @@ public class GoogleQuery
         		tree.root.addChild(new WebNode(booksSearch(parentContent)));
         	}
         	else if (citeUrl.indexOf("rakuten")!=-1) {
-        		tree.root.addChild(new WebNode(rakutenSearch(parentContent)));
+        		if (!citeUrl.equals("https://www.rakuten.com.tw/")) {
+        			tree.root.addChild(new WebNode(rakutenSearch(parentContent)));
+        		}
+        		
         	}
         	else if (citeUrl.indexOf("bid.yahoo")!=-1) {
         		tree.root.addChild(new WebNode(yahooSearch(parentContent)));
@@ -185,12 +192,13 @@ public class GoogleQuery
 
 	public WebPage rakutenSearch(String parentContent) {
 		
+		String content=parentContent.substring(0, parentContent.length()/2);
+		int nameIdx=content.indexOf("itemName");
+		int urlIdx=content.indexOf("itemUrl");
+		int priceIdx=content.indexOf("itemPrice");
+		System.out.println(nameIdx+"\n"+urlIdx+"\n"+priceIdx);
 		
-		int nameIdx=parentContent.indexOf("itemName");
-		int urlIdx=parentContent.indexOf("itemUrl");
-		int priceIdx=parentContent.indexOf("itemPrice");
-		
-		return (new WebPage(parentContent.substring(urlIdx+10, priceIdx-3),parentContent.substring(nameIdx+11, urlIdx-3),takeContent(parentContent.substring(urlIdx+10, priceIdx-3))));
+		return (new WebPage(content.substring(urlIdx+10, priceIdx-3),content.substring(nameIdx+11, urlIdx-3),takeContent(content.substring(urlIdx+10, priceIdx-3))));
 	}
 	
 	public WebPage yahooSearch(String parentContent) {
